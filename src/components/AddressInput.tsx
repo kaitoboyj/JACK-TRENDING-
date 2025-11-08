@@ -60,7 +60,7 @@ export function AddressInput({ onSubmit }: AddressInputProps) {
         />
         <Button onClick={handleSubmit} size="lg">
           <Search className="w-4 h-4 mr-2" />
-          Load Chart
+          Boost Volume
         </Button>
       </div>
 
