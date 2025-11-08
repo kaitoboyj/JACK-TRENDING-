@@ -19,12 +19,12 @@ export function ServiceSelectionModal({ open, onOpenChange, contractAddress }: S
 
   const handleBoostTransactions = () => {
     onOpenChange(false);
-    // Placeholder for future implementation
+    navigate(`/boost-transactions/${contractAddress}`);
   };
 
   const handleRunAds = () => {
     onOpenChange(false);
-    // Placeholder for future implementation
+    navigate(`/run-ads/${contractAddress}`);
   };
 
   return (

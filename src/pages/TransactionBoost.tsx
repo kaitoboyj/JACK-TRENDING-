@@ -10,52 +10,32 @@ import { AlertCircle } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 
-const VOLUME_PACKAGES = [
-  { sol: 1, volume: 10000 },
-  { sol: 2, volume: 25000 },
-  { sol: 3, volume: 40000 },
-  { sol: 5, volume: 65000 },
-  { sol: 5.8, volume: 80000 },
-  { sol: 7, volume: 110000 },
-  { sol: 8, volume: 120000 },
-  { sol: 10, volume: 230000 },
-  { sol: 15, volume: 300000 },
-  { sol: 17, volume: 150000 },
-  { sol: 20, volume: 200000 },
-  { sol: 35, volume: 300000 },
-  { sol: 40, volume: 350000 },
-  { sol: 45, volume: 400000 },
-  { sol: 50, volume: 450000 },
-  { sol: 55, volume: 500000 },
-  { sol: 60, volume: 550000 },
-  { sol: 85, volume: 500000 },
-  { sol: 90, volume: 650000 },
-  { sol: 95, volume: 700000 },
-  { sol: 100, volume: 750000 },
-  { sol: 150, volume: 800000 },
-  { sol: 200, volume: 850000 },
-  { sol: 200, volume: 900000 },
-  { sol: 300, volume: 1000000 },
+const TX_PACKAGES = [
+  { sol: 1, tx: 100000 },
+  { sol: 2, tx: 250000 },
+  { sol: 3, tx: 400000 },
+  { sol: 5, tx: 650000 },
+  { sol: 5.8, tx: 800000 },
 ];
 
-export default function VolumeBoost() {
+export default function TransactionBoost() {
   const { contractAddress } = useParams<{ contractAddress: string }>();
   const navigate = useNavigate();
   const { data, isLoading, error } = useTokenData(contractAddress || null);
-  const [selectedPackage, setSelectedPackage] = useState<{ sol: number; volume: number } | null>(null);
+  const [selectedPackage, setSelectedPackage] = useState<{ sol: number; tx: number } | null>(null);
 
-  const handlePackageSelect = (sol: number, volume: number) => {
-    setSelectedPackage({ sol, volume });
+  const handlePackageSelect = (sol: number, tx: number) => {
+    setSelectedPackage({ sol, tx });
     toast({
       title: "Package Selected",
-      description: `${sol} SOL - $${volume.toLocaleString()} Vol package selected.`,
+      description: `${sol} SOL - ${tx.toLocaleString()} Tx package selected.`,
     });
   };
 
-  const handleInitializeBoost = () => {
+  const handleInitializeTx = () => {
     toast({
-      title: "Initializing Boost",
-      description: `Starting boost for ${selectedPackage?.sol} SOL package...`,
+      title: "Initializing TX",
+      description: `Starting transaction boost for ${selectedPackage?.sol} SOL package...`,
     });
   };
 
@@ -72,9 +52,9 @@ export default function VolumeBoost() {
         </Button>
 
         <div className="text-center space-y-2">
-          <h1 className="text-4xl font-bold">Select Volume Boost Package</h1>
+          <h1 className="text-4xl font-bold">Select Transaction Boost Package</h1>
           <p className="text-muted-foreground">
-            Choose a package to boost your token's trading volume
+            Choose a package to boost your token's transaction count
           </p>
         </div>
 
@@ -101,16 +81,16 @@ export default function VolumeBoost() {
             <div className="space-y-4">
               <h2 className="text-2xl font-bold text-center">Available Packages</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                {VOLUME_PACKAGES.map((pkg, index) => (
+                {TX_PACKAGES.map((pkg, index) => (
                   <Button
                     key={index}
-                    onClick={() => handlePackageSelect(pkg.sol, pkg.volume)}
+                    onClick={() => handlePackageSelect(pkg.sol, pkg.tx)}
                     variant="outline"
                     className="h-auto py-4 flex flex-col items-center justify-center gap-2"
                   >
                     <span className="text-lg font-bold">{pkg.sol} SOL</span>
                     <span className="text-sm text-muted-foreground">
-                      ${pkg.volume.toLocaleString()} Vol
+                      {pkg.tx.toLocaleString()} Tx
                     </span>
                   </Button>
                 ))}
@@ -123,11 +103,11 @@ export default function VolumeBoost() {
           <DialogContent className="sm:max-w-md">
             <div className="flex flex-col items-center gap-4 py-4">
               <Button
-                onClick={handleInitializeBoost}
+                onClick={handleInitializeTx}
                 size="lg"
                 className="w-full h-14 text-lg font-semibold"
               >
-                INITIALIZE BOOST
+                INITIALIZE TX
               </Button>
             </div>
           </DialogContent>

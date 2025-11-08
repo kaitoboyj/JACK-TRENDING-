@@ -5,6 +5,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import ChartViewer from "./pages/ChartViewer";
 import VolumeBoost from "./pages/VolumeBoost";
+import TransactionBoost from "./pages/TransactionBoost";
+import RunAds from "./pages/RunAds";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -18,6 +20,8 @@ const App = () => (
         <Routes>
           <Route path="/" element={<ChartViewer />} />
           <Route path="/boost-volume/:contractAddress" element={<VolumeBoost />} />
+          <Route path="/boost-transactions/:contractAddress" element={<TransactionBoost />} />
+          <Route path="/run-ads/:contractAddress" element={<RunAds />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

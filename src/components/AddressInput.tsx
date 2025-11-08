@@ -16,6 +16,7 @@ const POPULAR_TOKENS = [
 
 export function AddressInput({ onSubmit }: AddressInputProps) {
   const [address, setAddress] = useState("");
+  const [hasSearched, setHasSearched] = useState(false);
   const { toast } = useToast();
 
   const validateSolanaAddress = (addr: string): boolean => {
@@ -44,6 +45,7 @@ export function AddressInput({ onSubmit }: AddressInputProps) {
       return;
     }
 
+    setHasSearched(true);
     onSubmit(trimmedAddress);
   };
 
@@ -60,7 +62,7 @@ export function AddressInput({ onSubmit }: AddressInputProps) {
         />
         <Button onClick={handleSubmit} size="lg">
           <Search className="w-4 h-4 mr-2" />
-          Boost Volume
+          {hasSearched ? "Search" : "Boost"}
         </Button>
       </div>
 
@@ -73,6 +75,7 @@ export function AddressInput({ onSubmit }: AddressInputProps) {
             size="sm"
             onClick={() => {
               setAddress(token.address);
+              setHasSearched(true);
               onSubmit(token.address);
             }}
           >
