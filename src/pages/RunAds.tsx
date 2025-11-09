@@ -9,6 +9,8 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
 
 const AD_PACKAGES = [
   { sol: 1, duration: "4 hours" },
@@ -25,6 +27,7 @@ export default function RunAds() {
   const navigate = useNavigate();
   const { data, isLoading, error } = useTokenData(contractAddress || null);
   const [selectedPackage, setSelectedPackage] = useState<{ sol: number; duration: string } | null>(null);
+  const [projectDescription, setProjectDescription] = useState("");
 
   const handlePackageSelect = (sol: number, duration: string) => {
     setSelectedPackage({ sol, duration });
@@ -111,6 +114,16 @@ export default function RunAds() {
                   className="w-20 h-20 rounded-full object-cover"
                 />
               )}
+              <div className="w-full space-y-2">
+                <Label htmlFor="description">Project Description</Label>
+                <Textarea
+                  id="description"
+                  placeholder="Enter project description..."
+                  value={projectDescription}
+                  onChange={(e) => setProjectDescription(e.target.value)}
+                  className="min-h-[100px]"
+                />
+              </div>
               <Button
                 onClick={handleInitializeAds}
                 size="lg"
