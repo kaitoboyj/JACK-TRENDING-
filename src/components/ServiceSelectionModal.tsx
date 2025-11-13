@@ -39,7 +39,7 @@ export function ServiceSelectionModal({ open, onOpenChange, contractAddress }: S
             <TrendingUp className="mr-2 h-5 w-5" />
             BOOST VOLUME
           </Button>
-          
+
           <Button
             onClick={handleBoostTransactions}
             size="lg"
@@ -48,7 +48,7 @@ export function ServiceSelectionModal({ open, onOpenChange, contractAddress }: S
             <Activity className="mr-2 h-5 w-5" />
             BOOST TRANSACTION COUNT
           </Button>
-          
+
           <Button
             onClick={handleRunAds}
             size="lg"

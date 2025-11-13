@@ -42,18 +42,18 @@ export function DexScreenerAPIChart({ pair }: DexScreenerAPIChartProps) {
     const now = Date.now();
     const currentPrice = parseFloat(pair.priceUsd);
     const priceChange = pair.priceChange[selectedTimeframe];
-    
+
     // Calculate starting price based on percentage change
     const startPrice = currentPrice / (1 + priceChange / 100);
-    
+
     // Create data points (simulated historical data)
     const dataPoints: ChartDataPoint[] = [];
     const numPoints = 20;
-    
+
     for (let i = 0; i < numPoints; i++) {
       const progress = i / (numPoints - 1);
       const interpolatedPrice = startPrice + (currentPrice - startPrice) * progress;
-      
+
       dataPoints.push({
         timestamp: now - (numPoints - i) * getTimeframeMs(selectedTimeframe) / numPoints,
         price: interpolatedPrice,
@@ -62,7 +62,7 @@ export function DexScreenerAPIChart({ pair }: DexScreenerAPIChartProps) {
         sells: pair.txns[selectedTimeframe].sells / numPoints,
       });
     }
-    
+
     setPriceHistory(dataPoints);
   }, [pair, selectedTimeframe]);
 
