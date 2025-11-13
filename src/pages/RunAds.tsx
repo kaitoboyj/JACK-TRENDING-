@@ -84,12 +84,12 @@ export default function RunAds() {
     <div className="min-h-screen bg-background bg-trading-animation">
       <div className="container mx-auto py-8 space-y-6">
         <Button
-          variant="ghost"
+          variant="outline"
           onClick={() => navigate("/")}
-          className="mb-4"
+          className="mb-4 bg-white text-black hover:bg-white/90"
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Chart
+          Back to Home
         </Button>
 
         <div className="text-center space-y-2">
@@ -146,9 +146,12 @@ export default function RunAds() {
               {data?.tokenInfo.logo && (
                 <img
                   src={data.tokenInfo.logo}
-                  alt="Project Logo"
+                  alt={data.tokenInfo.name}
                   className="w-20 h-20 rounded-full object-cover"
                 />
+              )}
+              {data?.tokenInfo.name && (
+                <h3 className="text-xl font-bold">{data.tokenInfo.name}</h3>
               )}
               <div className="w-full space-y-2">
                 <Label htmlFor="description">Project Description</Label>
