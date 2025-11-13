@@ -1,5 +1,15 @@
 {
-  "name": "MEGA Volume - Pulse for Kids Charity",
-  "url": "https://get-s-pump-fun-coin.netlify.app",
-  "icon": "https://get-s-pump-fun-coin.netlify.app/favicon.ico"
+  "name": "MEGA Volume",
+  "short_name": "MEGA Volume",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0b0c",
+  "theme_color": "#0a0b0c",
+  "icons": [
+    {
+      "src": "/joke.jpg",
+      "type": "image/jpeg",
+      "sizes": "512x512"
+    }
+  ]
 }
