@@ -11,7 +11,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import logo from "@/assets/mega-volume-logo.jpg";
+// Use public joke.jpg (new provided image) as the site logo
+const logoPath = "/joke.jpg";
 
 export default function ChartViewer() {
   const [contractAddress, setContractAddress] = useState<string | null>(null);
@@ -31,13 +32,13 @@ export default function ChartViewer() {
               <div className="absolute inset-0 rounded-full bg-cyan-500/20 blur-2xl animate-pulse"></div>
               <div className="relative rounded-full p-1 bg-gradient-to-r from-cyan-500 via-blue-500 to-cyan-500 animate-gradient">
                 <div className="rounded-full p-2 bg-background">
-                  <img src={logo} alt="MEGA boost" className="h-32 w-32 md:h-40 md:w-40 rounded-full" />
+                  <img src={logoPath} alt="JACK boost" className="h-32 w-32 md:h-40 md:w-40 rounded-full" />
                 </div>
               </div>
             </div>
           </div>
           <h1 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-blue-500 to-cyan-400 animate-gradient">
-            MEGA boost
+            JACK boost
           </h1>
           <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">
             Enhance your token visibility with our advanced volume generation system. Trusted by over 555+ projects to increase trading volume, create new holders, and achieve trading status.

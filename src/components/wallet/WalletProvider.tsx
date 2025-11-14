@@ -27,7 +27,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
           options: {
             projectId,
             metadata: {
-              name: "MEGA Volume",
+              name: "JACK Boost",
               description: "Boost volume, transactions, and ads",
               url: window.location.origin,
               icons: [iconUrl],

