@@ -106,35 +106,40 @@ All colors MUST be HSL.
 
 @layer utilities {
   .bg-trading-animation {
-    background: 
-      /* Dark red base gradient */
-      linear-gradient(135deg, hsl(0 100% 6%) 0%, hsl(10 100% 10%) 100%),
-      /* Flowing grid stripes tinted red */
-      repeating-linear-gradient(
-        90deg,
-        transparent,
-        transparent 50px,
-        hsla(0, 90%, 50%, 0.06) 50px,
-        hsla(0, 90%, 50%, 0.06) 100px
-      ),
-      repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 50px,
-        hsla(0, 90%, 50%, 0.06) 50px,
-        hsla(0, 90%, 50%, 0.06) 100px
-      );
-    background-size: 100% 100%, 100px 100px, 100px 100px;
-    animation: trading-flow 20s linear infinite;
+    /* Pure black space background; stars are separate overlay */
+    background: #000;
   }
 
-  @keyframes trading-flow {
-    0% {
-      background-position: 0% 0%, 0 0, 0 0;
-    }
-    100% {
-      background-position: 0% 0%, 100px 100px, -100px -100px;
-    }
+  /* Global starfield overlay */
+  .starfield {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .site-content {
+    position: relative;
+    z-index: 1;
+  }
+
+  .star {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,60,60,1) 0%, rgba(255,60,60,0.7) 40%, rgba(255,60,60,0.2) 70%, transparent 100%);
+    filter: drop-shadow(0 0 6px rgba(255,60,60,0.8)) drop-shadow(0 0 2px rgba(255,60,60,0.6));
+    animation-name: star-move;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+    animation-timing-function: ease-in-out;
+    transform: translate(0, 0) scale(var(--scale, 1));
+  }
+
+  @keyframes star-move {
+    0% { transform: translate(0, 0) scale(var(--scale, 1)); opacity: 0.9; }
+    100% { transform: translate(var(--dx, 0px), var(--dy, 0px)) scale(var(--scale, 1)); opacity: 0.6; }
   }
 
   @keyframes gradient {

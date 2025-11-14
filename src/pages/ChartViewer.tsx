@@ -30,14 +30,14 @@ export default function ChartViewer() {
           <div className="flex justify-center">
             <div className="relative">
               <div className="absolute inset-0 rounded-full bg-cyan-500/20 blur-2xl animate-pulse"></div>
-              <div className="relative rounded-full p-1 bg-gradient-to-r from-cyan-500 via-blue-500 to-cyan-500 animate-gradient">
+              <div className="relative rounded-full p-1 bg-gradient-to-r from-red-500 via-red-600 to-red-500 animate-gradient">
                 <div className="rounded-full p-2 bg-background">
                   <img src={logoPath} alt="JACK boost" className="h-32 w-32 md:h-40 md:w-40 rounded-full" />
                 </div>
               </div>
             </div>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 via-blue-500 to-cyan-400 animate-gradient">
+          <h1 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-red-400 via-red-600 to-red-400 animate-gradient">
             JACK boost
           </h1>
           <p className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto">

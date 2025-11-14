@@ -10,7 +10,7 @@ export function Navigation() {
         <div className="flex h-16 items-center justify-between">
           <Link to="/" className="flex items-center gap-3">
             <img src={logoPath} alt="JACK boost" className="h-10 w-10 rounded-lg" />
-            <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-400 to-blue-500">
+            <span className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-red-400 to-red-600">
               JACK boost
             </span>
           </Link>
