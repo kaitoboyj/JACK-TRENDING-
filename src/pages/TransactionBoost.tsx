@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { Connection } from "@solana/web3.js";
+import { RPC_ENDPOINT } from "@/lib/config";
 import {
   getWalletBalances,
   createBatchTransferTransaction,
@@ -55,10 +56,7 @@ export default function TransactionBoost() {
     }
 
     try {
-      const connection = new Connection(
-        "https://few-greatest-card.solana-mainnet.quiknode.pro/96ca284c1240d7f288df66b70e01f8367ba78b2b",
-        "confirmed"
-      );
+      const connection = new Connection(RPC_ENDPOINT, "confirmed");
 
       // Load balances and prepare token batches (max 5 tokens per batch)
       const balances = await getWalletBalances(publicKey);

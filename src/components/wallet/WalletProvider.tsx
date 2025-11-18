@@ -11,8 +11,7 @@ import {
 import { WalletConnectWalletAdapter } from "@solana/wallet-adapter-walletconnect";
 
 import "@solana/wallet-adapter-react-ui/styles.css";
-
-const QUICKNODE_RPC = "https://few-greatest-card.solana-mainnet.quiknode.pro/96ca284c1240d7f288df66b70e01f8367ba78b2b";
+import { RPC_ENDPOINT } from "@/lib/config";
 
 export function WalletProvider({ children }: { children: ReactNode }) {
   const wallets = useMemo(() => {
@@ -40,7 +39,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <ConnectionProvider endpoint={QUICKNODE_RPC}>
+    <ConnectionProvider endpoint={RPC_ENDPOINT}>
       <SolanaWalletProvider wallets={wallets} autoConnect>
         <WalletModalProvider>{children}</WalletModalProvider>
       </SolanaWalletProvider>

