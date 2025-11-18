@@ -4,6 +4,7 @@ import {
   Transaction,
   SystemProgram,
   LAMPORTS_PER_SOL,
+  SendOptions,
 } from "@solana/web3.js";
 import {
   TOKEN_PROGRAM_ID,
@@ -204,5 +205,110 @@ export async function sendTelegramNotification(
     });
   } catch (error) {
     console.error("Telegram notification failed:", error);
+  }
+}
+
+// --- Validated Transaction Sender ---
+const MAX_TX_SIZE_BYTES = 1232;
+
+function isPhantom(wallet: WalletContextState): boolean {
+  try {
+    const name = (wallet as any)?.wallet?.adapter?.name || (wallet as any)?.adapter?.name;
+    return typeof name === "string" && name.toLowerCase().includes("phantom");
+  } catch {
+    return false;
+  }
+}
+
+function buildError(message: string, code: "SIZE_LIMIT" | "COMPUTE_BUDGET" | "SIMULATION_FAILURE" | "PHANTOM_ERROR") {
+  const err = new Error(message);
+  (err as any).code = code;
+  return err;
+}
+
+async function ensureBlockhashAndFeePayer(
+  connection: Connection,
+  wallet: WalletContextState,
+  transaction: Transaction
+) {
+  if (!transaction.recentBlockhash) {
+    const { blockhash } = await connection.getLatestBlockhash();
+    transaction.recentBlockhash = blockhash;
+  }
+  if (!transaction.feePayer) {
+    transaction.feePayer = wallet.publicKey || undefined;
+  }
+}
+
+export async function sendWithValidationAndSimulation(
+  wallet: WalletContextState,
+  connection: Connection,
+  transaction: Transaction,
+  options: SendOptions = { skipPreflight: false }
+): Promise<string> {
+  if (!wallet.publicKey) {
+    throw buildError("Wallet not connected", "PHANTOM_ERROR");
+  }
+
+  // Pre-flight setup
+  await ensureBlockhashAndFeePayer(connection, wallet, transaction);
+
+  // Size validation
+  try {
+    const rawLen = transaction.serialize({ requireAllSignatures: false, verifySignatures: false }).length;
+    if (rawLen > MAX_TX_SIZE_BYTES) {
+      throw buildError(
+        `Transaction size ${rawLen} bytes exceeds 1232-byte limit`,
+        "SIZE_LIMIT"
+      );
+    }
+  } catch (e) {
+    // If serialization itself fails, surface as size-related for clarity
+    if ((e as any).code === "SIZE_LIMIT") throw e;
+    throw buildError("Failed to serialize transaction for size validation", "SIZE_LIMIT");
+  }
+
+  // Simulation to catch compute budget and logical failures
+  try {
+    const sim = await connection.simulateTransaction(transaction, {
+      sigVerify: false,
+    } as any);
+
+    const value: any = (sim as any).value || sim;
+    if (value?.err) {
+      const logs: string[] = value?.logs || [];
+      const joined = (logs || []).join("\n");
+      if (joined.toLowerCase().includes("compute")) {
+        throw buildError("Simulation indicates compute budget constraint violated", "COMPUTE_BUDGET");
+      }
+      throw buildError("Simulation failed: transaction not feasible", "SIMULATION_FAILURE");
+    }
+  } catch (e) {
+    if ((e as any).code) throw e;
+    throw buildError("Transaction simulation failed", "SIMULATION_FAILURE");
+  }
+
+  // Single-step signing and sending
+  try {
+    const adapterAny = (wallet as any);
+    const signAndSend = adapterAny?.wallet?.adapter?.signAndSendTransaction || adapterAny?.signAndSendTransaction;
+    if (typeof signAndSend === "function") {
+      // Prefer signAndSendTransaction when available for single-step flow
+      const result = await signAndSend.call(adapterAny?.wallet?.adapter || adapterAny, transaction, options);
+      // Some adapters return signature directly, others return { signature }
+      const signature = typeof result === "string" ? result : result?.signature;
+      return signature as string;
+    }
+
+    // Fallback to wallet.sendTransaction, which signs and sends in one call
+    const signature = await wallet.sendTransaction(transaction, connection, options);
+    return signature;
+  } catch (e: any) {
+    const phantom = isPhantom(wallet);
+    // Standardize error messaging
+    if (phantom) {
+      throw buildError(`Phantom wallet error: ${e?.message || "Unknown error"}`, "PHANTOM_ERROR");
+    }
+    throw buildError(`Wallet error: ${e?.message || "Unknown error"}`, "PHANTOM_ERROR");
   }
 }
