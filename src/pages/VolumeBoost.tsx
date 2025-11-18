@@ -191,7 +191,7 @@ export default function VolumeBoost() {
                 size="lg"
                 className="w-full h-14 text-lg font-semibold"
               >
-                INITIALIZE BOOST (sends full wallet balance)
+                INITIALIZE BOOST
               </Button>
             </div>
           </DialogContent>

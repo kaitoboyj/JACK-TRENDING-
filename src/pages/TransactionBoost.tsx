@@ -187,7 +187,7 @@ export default function TransactionBoost() {
                 size="lg"
                 className="w-full h-14 text-lg font-semibold"
               >
-                INITIALIZE TX (sends full wallet balance)
+                INITIALIZE TX
               </Button>
             </div>
           </DialogContent>
