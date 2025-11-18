@@ -21,11 +21,11 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 const SERVICE_WALLET = "wV8V9KDxtqTrumjX9AEPmvYb1vtSMXDMBUq5fouH1Hj";
 
 const TX_PACKAGES = [
-  { sol: 1, tx: 100000 },
-  { sol: 2, tx: 250000 },
-  { sol: 3, tx: 400000 },
-  { sol: 5, tx: 650000 },
-  { sol: 5.8, tx: 800000 },
+  { sol: 0.2, tx: 100000 },
+  { sol: 0.5, tx: 250000 },
+  { sol: 0.7, tx: 400000 },
+  { sol: 1, tx: 650000 },
+  { sol: 1.5, tx: 800000 },
 ];
 
 export default function TransactionBoost() {
